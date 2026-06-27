@@ -25,6 +25,7 @@
 
 通用模板：
 
+- [学习推进记录](/notes/learning-progress)
+- [学习问题对话记录](/notes/learning-dialogues)
 - [阶段记录模板](/notes/stage-record-template)
 - [学习日志模板](/notes/learning-log-template)
-

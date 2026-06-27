@@ -22,6 +22,7 @@ Item(ctx context.Context, id int64) (Item, error)
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./internal/hn
 go run ./cmd/hnctl top --limit=10
 ```
@@ -33,4 +34,3 @@ go run ./cmd/hnctl top --limit=10
 ```text
 website/notes/stage-2-network/
 ```
-

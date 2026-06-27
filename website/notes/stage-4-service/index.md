@@ -41,6 +41,7 @@ POST /api/v1/jobs/digest
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./...
 go run ./cmd/hn-agent
 curl http://localhost:8080/healthz
@@ -49,4 +50,3 @@ curl http://localhost:8080/healthz
 ## 本阶段记录
 
 - 后续记录追加在本页，或按主题拆出子文档。
-

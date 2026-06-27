@@ -20,6 +20,8 @@
 
 ## 知识记录
 
+- [阶段二教练笔记](/notes/stage-2-network/coach-notes)
+
 ### 外部 I/O 的基本规则
 
 所有外部请求都应该带 timeout，并且错误要返回给调用方，而不是只打印日志。
@@ -39,11 +41,11 @@ GET https://hacker-news.firebaseio.com/v0/item/{id}.json
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./internal/hn
 go run ./cmd/hnctl top --limit=10
 ```
 
 ## 本阶段记录
 
-- 后续记录追加在本页，或按主题拆出子文档。
-
+- [阶段二教练笔记](/notes/stage-2-network/coach-notes)：`context`、`net/http`、JSON 解码、错误返回和 `httptest`。

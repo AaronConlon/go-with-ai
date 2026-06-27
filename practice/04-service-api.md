@@ -23,6 +23,7 @@ POST /api/v1/jobs/digest
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./...
 go run ./cmd/hn-agent
 curl http://localhost:8080/healthz
@@ -35,4 +36,3 @@ curl http://localhost:8080/healthz
 ```text
 website/notes/stage-4-service/
 ```
-

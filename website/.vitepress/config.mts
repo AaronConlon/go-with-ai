@@ -41,8 +41,12 @@ export default defineConfig({
           items: [
             { text: '总览', link: '/notes/' },
             { text: '阶段 1：启动期', link: '/notes/stage-1-startup/' },
+            { text: '阶段 1：教练笔记', link: '/notes/stage-1-startup/coach-notes' },
+            { text: '阶段 1：测试语法拆解', link: '/notes/stage-1-startup/go-test-syntax' },
             { text: '阶段 2：网络期', link: '/notes/stage-2-network/' },
+            { text: '阶段 2：教练笔记', link: '/notes/stage-2-network/coach-notes' },
             { text: '阶段 3：并发期', link: '/notes/stage-3-concurrency/' },
+            { text: '阶段 3：教练笔记', link: '/notes/stage-3-concurrency/coach-notes' },
             { text: '阶段 4：服务期', link: '/notes/stage-4-service/' },
             { text: '阶段 5：AI 整合期', link: '/notes/stage-5-ai-integration/' },
             { text: '阶段 6：验证与部署期', link: '/notes/stage-6-delivery/' }
@@ -51,6 +55,8 @@ export default defineConfig({
         {
           text: '通用卡片',
           items: [
+            { text: '学习推进记录', link: '/notes/learning-progress' },
+            { text: '学习问题对话记录', link: '/notes/learning-dialogues' },
             { text: 'Go Module', link: '/notes/go-module' },
             { text: '学习日志模板', link: '/notes/learning-log-template' },
             { text: '阶段记录模板', link: '/notes/stage-record-template' }

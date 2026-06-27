@@ -21,6 +21,7 @@ FetchItems(ctx context.Context, ids []int64, concurrency int) ([]Item, error)
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./internal/hn
 go run ./cmd/hnctl top --limit=20 --concurrency=5
 ```
@@ -32,4 +33,3 @@ go run ./cmd/hnctl top --limit=20 --concurrency=5
 ```text
 website/notes/stage-3-concurrency/
 ```
-

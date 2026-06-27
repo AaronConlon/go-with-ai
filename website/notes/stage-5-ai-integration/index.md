@@ -41,6 +41,7 @@
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./internal/summary
 go run ./cmd/hnctl summarize --id=...
 ```
@@ -48,4 +49,3 @@ go run ./cmd/hnctl summarize --id=...
 ## 本阶段记录
 
 - 后续记录追加在本页，或按主题拆出子文档。
-

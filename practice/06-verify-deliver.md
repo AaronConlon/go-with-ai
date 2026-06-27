@@ -16,6 +16,7 @@
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./...
 docker build -t hn-agent .
 ```
@@ -27,4 +28,3 @@ docker build -t hn-agent .
 ```text
 website/notes/stage-6-delivery/
 ```
-

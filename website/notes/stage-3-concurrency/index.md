@@ -20,6 +20,8 @@
 
 ## 知识记录
 
+- [阶段三教练笔记](/notes/stage-3-concurrency/coach-notes)
+
 ### 有限并发
 
 并发不是越多越好。对外部 API 做 fan-out 时，要用明确的并发上限保护自己和对方服务。
@@ -36,11 +38,11 @@ sem := make(chan struct{}, concurrency)
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./internal/hn
 go run ./cmd/hnctl top --limit=20 --concurrency=5
 ```
 
 ## 本阶段记录
 
-- 后续记录追加在本页，或按主题拆出子文档。
-
+- [阶段三教练笔记](/notes/stage-3-concurrency/coach-notes)：goroutine、`errgroup`、channel semaphore、取消和错误传播。

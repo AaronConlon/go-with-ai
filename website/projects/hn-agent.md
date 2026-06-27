@@ -28,15 +28,16 @@
 ## 推荐包结构
 
 ```text
-cmd/hn-agent/
-internal/config/
-internal/hn/
-internal/summary/
-internal/digest/
-internal/store/
-internal/notifier/
-internal/httpapi/
-internal/obs/
+hn-agent/
+  cmd/hn-agent/
+  internal/config/
+  internal/hn/
+  internal/summary/
+  internal/digest/
+  internal/store/
+  internal/notifier/
+  internal/httpapi/
+  internal/obs/
 ```
 
 ## 第一版验收
@@ -54,4 +55,3 @@ internal/obs/
 - 增加主题过滤。
 - 增加 Telegram、Slack、Email 推送。
 - 增加 ChatGPT Action 查询入口。
-

@@ -39,6 +39,7 @@
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./...
 docker build -t hn-agent .
 ```
@@ -46,4 +47,3 @@ docker build -t hn-agent .
 ## 本阶段记录
 
 - 后续记录追加在本页，或按主题拆出子文档。
-

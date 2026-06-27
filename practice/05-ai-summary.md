@@ -25,6 +25,7 @@
 ## 验收标准
 
 ```bash
+cd hn-agent
 go test ./internal/summary
 go run ./cmd/hnctl summarize --id=...
 ```
@@ -36,4 +37,3 @@ go run ./cmd/hnctl summarize --id=...
 ```text
 website/notes/stage-5-ai-integration/
 ```
-

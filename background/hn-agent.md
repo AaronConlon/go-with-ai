@@ -33,15 +33,16 @@ flowchart LR
 ## 包结构草案
 
 ```text
-cmd/hn-agent/
-internal/config/
-internal/hn/
-internal/summary/
-internal/digest/
-internal/store/
-internal/notifier/
-internal/httpapi/
-internal/obs/
+hn-agent/
+  cmd/hn-agent/
+  internal/config/
+  internal/hn/
+  internal/summary/
+  internal/digest/
+  internal/store/
+  internal/notifier/
+  internal/httpapi/
+  internal/obs/
 ```
 
 ## API 草案
@@ -62,4 +63,3 @@ internal/obs/
 - 摘要生成失败时有错误记录和可重试空间。
 - 同一条 story 不会重复推送。
 - 关键逻辑有单元测试。
-

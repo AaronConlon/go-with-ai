@@ -7,6 +7,7 @@
 - `background/`：学习背景、研究结论、路线设计和项目方向沉淀。
 - `practice/`：从零开始推进 HN 摘要推送 Agent 的实战目录。
 - `website/`：基于 VitePress 的静态文档站点，用于持续记录 Go 学习笔记、知识卡片和项目实践。
+- `hn-agent/`：Hacker News 摘要推送 Agent 的 Go 实战项目目录。这个目录由学习者在阶段一创建。
 
 ## 快速开始
 
@@ -60,3 +61,19 @@ website/static/images/
 6. 验证与部署期。
 
 实战推进记录放在 `practice/`，阶段知识沉淀回填到 `website/notes/` 对应模块。
+
+## Go 项目位置约定
+
+仓库根目录是学习工作区，不直接作为 Go module。Hacker News 实战项目放在：
+
+```text
+hn-agent/
+```
+
+因此 Go 相关命令默认在 `hn-agent/` 内执行，例如：
+
+```bash
+cd hn-agent
+go test ./...
+go run ./cmd/hnctl
+```

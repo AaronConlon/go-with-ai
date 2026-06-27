@@ -1,0 +1,49 @@
+# 阶段 2：网络期
+
+目标：能稳定调用 Hacker News API，并把外部 JSON 转成 Go struct。
+
+## 学习目标
+
+- 使用 `net/http` 发起请求。
+- 使用 `http.NewRequestWithContext` 绑定取消和超时。
+- 使用 `encoding/json` 解析响应。
+- 对 status code、空响应和 JSON 错误做明确处理。
+- 写出可测试的 HN client。
+
+## 完成任务
+
+- [ ] 实现 `TopStories(ctx)`。
+- [ ] 实现 `Item(ctx, id)`。
+- [ ] 增加 HTTP timeout。
+- [ ] 为 HN client 写 `httptest`。
+- [ ] 记录 Hacker News item 字段含义。
+
+## 知识记录
+
+### 外部 I/O 的基本规则
+
+所有外部请求都应该带 timeout，并且错误要返回给调用方，而不是只打印日志。
+
+### HN API 草案
+
+```text
+GET https://hacker-news.firebaseio.com/v0/topstories.json
+GET https://hacker-news.firebaseio.com/v0/item/{id}.json
+```
+
+## 问题清单
+
+- 单个 story 拉取失败时，是整批失败还是跳过？
+- HN API 是否需要本地缓存？
+
+## 验收标准
+
+```bash
+go test ./internal/hn
+go run ./cmd/hnctl top --limit=10
+```
+
+## 本阶段记录
+
+- 后续记录追加在本页，或按主题拆出子文档。
+

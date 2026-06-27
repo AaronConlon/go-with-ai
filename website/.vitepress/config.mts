@@ -6,11 +6,17 @@ export default defineConfig({
   description: '用项目驱动学习 Go，并沉淀可复用的工程知识。',
   cleanUrls: true,
   lastUpdated: true,
+  head: [
+    ['link', { rel: 'icon', href: '/favicon.ico', sizes: 'any' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' }],
+    ['link', { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16.png' }],
+    ['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }]
+  ],
   vite: {
     publicDir: 'static'
   },
   themeConfig: {
-    logo: '/images/go-with-ai.svg',
+    logo: '/images/project-logo-192.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '学习路径', link: '/learning/' },

@@ -17,6 +17,7 @@
 - 关键语法旁边要有注释，例如 `package`、`import`、`struct`、`func`、`return`。
 - 标准库第一次出现时要解释用途，例如 `fmt`、`os`、`testing`。
 - Go 特有写法要解释意图，例如 table-driven test、`t.Run`、`os.Exit`。
+- 每个可以直接落到文件里的“推荐实现”代码块，第一行先写完整仓库相对路径和文件名，例如 `// hn-agent/internal/hn/story.go`。
 - 注释服务理解，不追求生产代码的简洁程度。
 
 等进入第四阶段以后，再逐渐把注释密度降到真实项目常见水平。
@@ -130,6 +131,10 @@ go run ./cmd/hnctl version
 go run ./cmd/hnctl top --limit=10
 go run ./cmd/hnctl summarize --id=...
 ```
+
+注意：阶段一只实现最小 CLI。当前代码只需要支持无参数运行，以及 `version` 或 `--version` 这类版本命令。
+
+`top --limit=10` 和 `summarize --id=...` 是后续阶段的目标命令形态，放在这里是为了让你先看到参数会如何进入程序，不代表阶段一已经实现了 `top`、`limit` 或 `summarize` 的业务逻辑。
 
 这条路径很适合学习：每一步都能通过命令马上看到结果。
 
@@ -457,6 +462,9 @@ func main() {
 func run(args []string) int {
 	// len(args) 表示参数数量。
 	// 先判断 len(args) > 0，是为了避免访问 args[0] 时越界。
+	// 阶段一只识别 version 或 --version。
+	// 像 top --limit=10 这样的参数虽然也会进入 args，
+	// 但当前还没有解析和执行它们的业务逻辑。
 	if len(args) > 0 && (args[0] == "version" || args[0] == "--version") {
 		fmt.Println(version)
 		return 0

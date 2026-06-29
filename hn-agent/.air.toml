@@ -1,0 +1,9 @@
+# hn-agent/.air.toml
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/hn-agent ./cmd/hn-agent"
+bin = "./tmp/hn-agent"
+include_ext = ["go"]
+exclude_dir = ["tmp", "vendor"]

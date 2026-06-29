@@ -27,6 +27,8 @@ go test ./internal/hn
 go run ./cmd/hnctl top --limit=10
 ```
 
+说明：`top --limit=10` 是阶段二希望接入 CLI 后达到的目标形态。如果当前 `cmd/hnctl` 还只支持 `version`，先用 `go test ./internal/hn` 验收 HN client。
+
 ## 回填记录
 
 完成后把 HTTP、JSON、错误处理和 HN API 字段记录到：

@@ -33,6 +33,9 @@ hn-agent/
 
 - [阶段一教练笔记](/notes/stage-1-startup/coach-notes)
 - [Go 测试代码语法拆解](/notes/stage-1-startup/go-test-syntax)
+- [Go 变量定义语法](/notes/stage-1-startup/go-variable-syntax)
+- [Go 切片与数组](/notes/stage-1-startup/go-slice-vs-array)
+- [Go if 语法](/notes/stage-1-startup/go-if-syntax)
 
 ### Go module
 
@@ -65,6 +68,7 @@ go run ./cmd/hnctl
 
 - [阶段一教练笔记](/notes/stage-1-startup/coach-notes)：项目骨架、module path、`internal/`、table-driven test、最小 CLI 和验收命令。
 - [Go 测试代码语法拆解](/notes/stage-1-startup/go-test-syntax)：逐段解释第一段 Go 测试代码的语法。
+- [Go 变量定义语法](/notes/stage-1-startup/go-variable-syntax)：解释 `var`、`const`、`:=` 和 `=` 的区别。
 
 ## 完成状态
 

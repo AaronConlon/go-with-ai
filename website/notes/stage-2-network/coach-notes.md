@@ -64,6 +64,301 @@ type Item struct {
 
 Go 里大写开头的标识符是 exported，可以被其他 package 访问。`encoding/json` 也只能给可导出的字段赋值，所以 `ID`、`Title`、`URL` 都要大写。
 
+这里有两个概念叠在一起：Go 的 package 可见性，以及 `encoding/json` 如何给 struct 字段赋值。
+
+## Go 的大小写可见性规则
+
+Go 没有 `public`、`private` 这种关键字。它用首字母大小写控制一个名字能不能被别的 package 使用。
+
+| 写法 | 名称 | 其他 package 能访问吗 |
+| --- | --- | --- |
+| `Story` | exported | 可以 |
+| `Item` | exported | 可以 |
+| `ID` | exported | 可以 |
+| `Title` | exported | 可以 |
+| `story` | unexported | 不可以 |
+| `item` | unexported | 不可以 |
+| `id` | unexported | 不可以 |
+| `title` | unexported | 不可以 |
+
+例如在 `internal/hn` 包里：
+
+```go
+package hn
+
+type Story struct {
+	ID    int64
+	Title string
+}
+```
+
+其他 package 可以这样用：
+
+```go
+story := hn.Story{
+	ID:    1,
+	Title: "Learning Go",
+}
+```
+
+但如果写成小写：
+
+```go
+package hn
+
+type Story struct {
+	id    int64
+	title string
+}
+```
+
+其他 package 不能直接访问：
+
+```go
+story := hn.Story{
+	id:    1,              // 不允许：id 没有导出
+	title: "Learning Go",  // 不允许：title 没有导出
+}
+```
+
+## `encoding/json` 为什么也需要大写字段
+
+`encoding/json` 是标准库里的另一个 package。它不属于你的 `hn` package。
+
+当你写：
+
+```go
+var item Item
+err := json.NewDecoder(resp.Body).Decode(&item)
+```
+
+`encoding/json` 需要把 JSON 里的字段写进 `item`：
+
+```json
+{
+  "id": 1,
+  "title": "Learning Go",
+  "url": "https://example.com"
+}
+```
+
+如果 struct 是这样：
+
+```go
+type Item struct {
+	ID    int64  `json:"id"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+```
+
+`encoding/json` 可以写入，因为 `ID`、`Title`、`URL` 都是大写开头，是 exported 字段。
+
+如果 struct 写成这样：
+
+```go
+type Item struct {
+	id    int64  `json:"id"`
+	title string `json:"title"`
+	url   string `json:"url"`
+}
+```
+
+`encoding/json` 看得到 tag，但不能给这些字段赋值，因为 `id`、`title`、`url` 是 unexported 字段。
+
+结果通常会是：JSON 解码不报错，但字段保持零值。
+
+```go
+// id    仍然是 0
+// title 仍然是 ""
+// url   仍然是 ""
+```
+
+这会很隐蔽，所以写 API 响应 struct 时，字段一般都用大写开头。
+
+## 那 `json:"id"` 是干什么的
+
+Go 字段要大写：
+
+```go
+ID
+Title
+URL
+```
+
+但 JSON 字段通常是小写或 snake_case：
+
+```json
+{
+  "id": 1,
+  "title": "Learning Go",
+  "url": "https://example.com"
+}
+```
+
+所以用 json tag 做映射：
+
+```go
+ID    int64  `json:"id"`
+Title string `json:"title"`
+URL   string `json:"url"`
+```
+
+可以理解成：
+
+```text
+Go 代码里叫 ID，JSON 里叫 id。
+Go 代码里叫 Title，JSON 里叫 title。
+Go 代码里叫 URL，JSON 里叫 url。
+```
+
+## `json:"url"` 这种写法到底是什么
+
+```go
+URL string `json:"url"`
+```
+
+这整行可以分成三部分：
+
+```text
+URL           字段名
+string        字段类型
+`json:"url"`  struct tag
+```
+
+`json:"url"` 不是字段值，也不是注释。它叫 struct tag，可以理解成“贴在字段上的说明标签”。
+
+Go 语言本身不会主动使用这个 tag，但标准库里的 `encoding/json` 会读取它。
+
+### 为什么用反引号
+
+Go 里有两种常见字符串写法：
+
+```go
+"普通字符串"
+`原始字符串`
+```
+
+struct tag 通常用反引号，因为里面经常包含双引号：
+
+```go
+`json:"url"`
+```
+
+如果不用反引号，就需要写很多转义字符，不好读。
+
+### `json:"url"` 的意思
+
+```go
+URL string `json:"url"`
+```
+
+意思是：
+
+> 当使用 `encoding/json` 编码或解码时，这个 Go 字段对应 JSON 里的 `url` 字段。
+
+解码时：
+
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+会填进：
+
+```go
+item.URL
+```
+
+编码时：
+
+```go
+Item{URL: "https://example.com"}
+```
+
+会变成：
+
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+### 为什么不是 `URL string json:"url"`
+
+因为 tag 是一个整体的字符串元信息，Go 语法要求它写在字段类型后面，并且用反引号包起来：
+
+```go
+字段名 字段类型 `tag`
+```
+
+所以完整格式是：
+
+```go
+URL string `json:"url"`
+```
+
+### 常见 tag 写法
+
+忽略空值：
+
+```go
+URL string `json:"url,omitempty"`
+```
+
+意思是：如果 `URL` 是空字符串，编码成 JSON 时可以省略这个字段。
+
+忽略字段：
+
+```go
+Secret string `json:"-"`
+```
+
+意思是：这个字段不参与 JSON 编码和解码。
+
+JSON 字段名和 Go 字段名完全不同：
+
+```go
+Descendants int `json:"descendants"`
+```
+
+意思是：Go 里叫 `Descendants`，JSON 里叫 `descendants`。
+
+### 先记住一句话
+
+`json:"url"` 是给 `encoding/json` 看的字段映射说明：Go 里字段叫 `URL`，JSON 里字段叫 `url`。
+
+## 为什么是 `ID` 和 `URL`，不是 `Id` 和 `Url`
+
+这是 Go 的命名惯例。常见首字母缩写一般保持全大写：
+
+```go
+ID
+URL
+HTTP
+JSON
+API
+```
+
+所以更推荐：
+
+```go
+ID  int64
+URL string
+```
+
+而不是：
+
+```go
+Id  int64
+Url string
+```
+
+## 先记住一句话
+
+只要一个 struct 要给别的 package 用，或者要被 `encoding/json` 自动填充字段，字段名就应该大写开头。
+
 ## 第二步：定义 Client
 
 ```go
@@ -193,6 +488,53 @@ func (c *Client) Item(ctx context.Context, id int64) (Item, error) {
 
 Go 函数如果返回 `(Item, error)`，出错时也必须返回一个 `Item` 值。`Item{}` 是 `Item` 的零值，表示“没有有效结果”。调用方应该先检查 `err`，再使用 `item`。
 
+### 怎么判断 `Item` 是否真的有效
+
+不要靠 `Item{}` 判断成功失败，要靠 `err`。
+
+::: danger 先看 `err`
+Go 里 `(结果, error)` 的判断顺序是：**先看 `err`，再使用结果**。
+
+`err != nil` 时，前面的结果值不可信；`err == nil` 时，前面的结果才表示成功结果。
+:::
+
+调用方应该这样写：
+
+```go
+item, err := client.Item(ctx, id)
+if err != nil {
+	return err
+}
+
+// 到这里才说明 Item 调用成功，可以使用 item。
+fmt.Println(item.Title)
+```
+
+这条规则很重要：
+
+```text
+err != nil：结果值不可信，不要使用 item。
+err == nil：函数成功，item 才是有效结果。
+```
+
+为什么不靠 `item == Item{}` 判断？
+
+因为 `Item{}` 只是 `Item` 的零值，不是状态标志。理论上，一个正常返回的值也可能有一些字段是零值，例如 `Score` 是 `0`、`URL` 是空字符串。业务是否有效应该由函数的错误返回或领域校验来表达，而不是靠猜测 struct 是否等于零值。
+
+如果未来确实需要表达“没有找到，但这不是系统错误”，可以选择更明确的 API 设计：
+
+```go
+func (c *Client) Item(ctx context.Context, id int64) (*Item, error)
+```
+
+这种设计里，`nil, nil` 可以表示“没找到且不是错误”。也可以设计成：
+
+```go
+func (c *Client) Item(ctx context.Context, id int64) (Item, bool, error)
+```
+
+其中 `bool` 专门表示有没有找到。但阶段二先用 `(Item, error)`，并约定：有错误就返回 `Item{}, err`；没错误就返回 `item, nil`。
+
 ## 第五步：用 `httptest` 测试
 
 ```go
@@ -237,6 +579,30 @@ func TestTopStories(t *testing.T) {
 }
 ```
 
+这里的：
+
+```go
+ids, err := client.TopStories(context.Background())
+```
+
+可以读成：
+
+```text
+调用 TopStories，成功时拿到 ids，失败时拿到 err。
+```
+
+这和 JavaScript 里常见的 `try/catch` 不一样。Go 不把这里的错误藏到外层 `catch`，而是把错误作为第二个返回值交给当前调用点。
+
+所以测试里紧接着写：
+
+```go
+if err != nil {
+	t.Fatalf("TopStories() error = %v", err)
+}
+```
+
+意思是：如果拉取 top stories 失败，这个测试立刻失败；只有 `err == nil` 时，后面才继续检查 `ids`。
+
 ### `context.Background()` 是什么
 
 `context.Background()` 是一个空的根 context。测试或 main 入口里经常用它作为起点。后续如果需要 timeout，可以从它派生：
@@ -255,9 +621,15 @@ go test ./internal/hn
 go run ./cmd/hnctl top --limit=10
 ```
 
+这里的 `top --limit=10` 表示阶段二希望达到的 CLI 目标：
+
+- `top`：调用 HN client 拉取 top stories。
+- `--limit=10`：最多展示 10 个 story id，后续再扩展成展示 story 详情。
+
+如果当前 `cmd/hnctl` 还没有接入 `Client.TopStories`，这条命令不会真的使用 `limit`。此时先用 `go test ./internal/hn` 验收 HTTP client，等 client 稳定后再把它接到 CLI。
+
 如果还没接 CLI，先只验收：
 
 ```bash
 go test ./internal/hn
 ```
-

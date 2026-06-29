@@ -21,6 +21,9 @@
 ## 知识记录
 
 - [阶段二教练笔记](/notes/stage-2-network/coach-notes)
+- [Go Client 构造函数语法拆解](/notes/stage-2-network/go-client-constructor-syntax)
+- [Go Method Receiver 语法拆解](/notes/stage-2-network/go-method-receiver-syntax)
+- [Go httptest 使用说明](/notes/stage-2-network/go-httptest-syntax)
 
 ### 外部 I/O 的基本规则
 
@@ -46,6 +49,11 @@ go test ./internal/hn
 go run ./cmd/hnctl top --limit=10
 ```
 
+说明：`top --limit=10` 是本阶段把 HN client 接入 CLI 后的目标命令。接入前，先以 `go test ./internal/hn` 验收 `Client.TopStories`。
+
 ## 本阶段记录
 
 - [阶段二教练笔记](/notes/stage-2-network/coach-notes)：`context`、`net/http`、JSON 解码、错误返回和 `httptest`。
+- [Go Client 构造函数语法拆解](/notes/stage-2-network/go-client-constructor-syntax)：解释 `NewClient`、`*Client`、`&Client{}`、嵌套初始化和 `time.Second`。
+- [Go Method Receiver 语法拆解](/notes/stage-2-network/go-method-receiver-syntax)：解释 `(c *Client)`、method、receiver、返回值 `[]int64, error`。
+- [Go httptest 使用说明](/notes/stage-2-network/go-httptest-syntax)：解释 `httptest.NewServer` 应该写在哪个文件，以及如何配合 `Client` 测 HTTP 请求。

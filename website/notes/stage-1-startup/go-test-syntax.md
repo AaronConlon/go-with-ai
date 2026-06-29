@@ -376,6 +376,40 @@ got := IsValidStory(tt.story)
 
 `want` 表示“期望结果”。
 
+### 参数个数必须匹配
+
+Go 调用函数时，参数个数必须和函数定义匹配。
+
+例如：
+
+```go
+func IsValidStory(story Story) bool {
+	return story.Type == "story" && story.Title != ""
+}
+```
+
+这个函数定义里只有一个参数 `story Story`，所以调用时必须传一个 `Story`：
+
+```go
+got := IsValidStory(tt.story)
+```
+
+不能少传：
+
+```go
+got := IsValidStory()
+// not enough arguments in call to IsValidStory
+```
+
+也不能多传：
+
+```go
+got := IsValidStory(tt.story, true)
+// too many arguments in call to IsValidStory
+```
+
+和 JavaScript 不同，Go 不会把缺失参数自动变成 `undefined`，也不会自动补成 `nil`。如果某个参数没有值，也要看函数签名需要什么类型，然后显式传一个合适的值。只有 slice、map、channel、function、pointer、interface 这类可以为 `nil` 的类型，才能传 `nil`。
+
 ## `if got != tt.want`
 
 ```go
@@ -417,6 +451,30 @@ t.Fatalf("IsValidStory() = %v, want %v", got, tt.want)
 ```text
 IsValidStory() = false, want true
 ```
+
+## 常见格式化动词
+
+`t.Fatalf`、`fmt.Printf`、`fmt.Errorf` 都会用到格式化动词。动词写在字符串里，以 `%` 开头。
+
+常见的几个：
+
+| 动词 | 适合输出什么 | 例子 |
+| --- | --- | --- |
+| `%s` | 字符串 | `"hello"` |
+| `%d` | 十进制整数 | `3`、`101` |
+| `%v` | 默认格式，适合大多数值 | `true`、`some error` |
+| `%#v` | Go 语法风格的详细格式 | `[]hn.Item(nil)`、`hn.Item{ID:101}` |
+
+所以这两行的目的不一样：
+
+```go
+t.Fatalf("expected 3 items, got %d", len(items))
+t.Fatalf("expected nil items on error, got %#v", items)
+```
+
+第一行用 `%d`，因为 `len(items)` 是整数。
+
+第二行用 `%#v`，因为 `items` 是一个 slice。失败时我们想看到它到底是什么：是 `nil`、空 slice，还是里面真的有元素。`%#v` 比 `%v` 更适合调试这类复合值。
 
 ## 这段代码整体在做什么
 
@@ -476,4 +534,3 @@ for (const tt of tests) {
 - `t.Run`：子测试。
 - `got / want`：实际结果和期望结果。
 - `t.Fatalf`：测试失败并输出信息。
-
